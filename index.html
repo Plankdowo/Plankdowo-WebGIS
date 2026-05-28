@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem Informasi Pertanahan Kecamatan Karangdowo, Kabupaten Klaten, Jawa Tengah.">
+    <title>SIP Karangdowo — Sistem Informasi Pertanahan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+    <div class="nav-brand">
+        <div class="nav-logo-icon">
+            <i class="fa fa-globe-asia"></i>
+        </div>
+        <div class="nav-brand-text">
+            <span class="nav-brand-sub">Sistem Informasi Pertanahan</span>
+            <span class="nav-brand-name">Karangdowo</span>
+        </div>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#beranda" class="nav-link active">Beranda</a></li>
+        <li><a href="#tentang" class="nav-link">Tentang</a></li>
+        <li><a href="#statistik" class="nav-link">Data & Statistik</a></li>
+        <li><a href="#kegiatan" class="nav-link">Kegiatan</a></li>
+        <li><a href="#kontak" class="nav-link">Kontak</a></li>
+    </ul>
+    <div class="nav-actions">
+        <a href="login.html" class="btn-peta-nav">
+            <i class="fa fa-user"></i> Login/Masuk
+        </a>
+        <button class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#beranda" onclick="closeMobileMenu()">Beranda</a>
+    <a href="#tentang" onclick="closeMobileMenu()">Tentang</a>
+    <a href="#statistik" onclick="closeMobileMenu()">Data & Statistik</a>
+    <a href="#kegiatan" onclick="closeMobileMenu()">Kegiatan</a>
+    <a href="#kontak" onclick="closeMobileMenu()">Kontak</a>
+    <a href="map.html" class="mobile-peta-btn">Buka Peta Interaktif</a>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="hero" id="beranda">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa fa-map-pin"></i>
+            Desa Karangdowo, Kabupaten Klaten
+        </div>
+        <h1 class="hero-title">
+            Satu Peta,<br>
+            <em>Satu Data,</em><br>
+            Untuk Karangdowo
+        </h1>
+        <p class="hero-desc">
+            Portal Geospasial berbasis WebGIS untuk informasi Penggunaan Lahan dan Bidang Tanah. 
+            Visualisasi data spasial interaktif mencakup informasi kepemilikan, status hak, 
+            dan penggunaan lahan Desa Karangdowo.
+        </p>
+        <div class="hero-actions">
+            <a href="map.html" class="btn-primary-hero">
+                <i class="fa-regular fa-map"></i>
+                Mulai Eksplorasi Peta
+            </a>
+            <a href="#tentang" class="btn-ghost-hero">
+                Pelajari Lebih Lanjut <i class="fa fa-arrow-down"></i>
+            </a>
+        </div>
+        <div class="hero-stats">
+            <!-- <div class="hero-stat-item">
+                <span class="hero-stat-num" data-target="19">0</span>
+                <span class="hero-stat-label">Desa / Kelurahan</span> -->
+            <!-- </div> -->
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-num" data-target="1540">0</span>
+                <span class="hero-stat-label">Bidang Tanah</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-num" data-target="1497">0</span>
+                <span class="hero-stat-label">Pemilik Terdaftar</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-num" data-suffix="%" data-target="95">0</span>
+                <span class="hero-stat-label">Bidang Terpetakan</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-map-preview">
+        <div class="map-preview-card">
+            <div class="map-preview-header">
+                <span class="map-dot red"></span>
+                <span class="map-dot yellow"></span>
+                <span class="map-dot green"></span>
+                <span class="map-preview-title">WebGIS Karangdowo</span>
+            </div>
+            <div class="map-preview-body">
+                <div class="map-fake-bg">
+                    <div class="map-grid-lines"></div>
+                    <div class="map-polygon p1"></div>
+                    <div class="map-polygon p2"></div>
+                    <div class="map-polygon p3"></div>
+                    <div class="map-polygon p4"></div>
+                    <div class="map-polygon p5"></div>
+                    <div class="map-pulse-pin">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                </div>
+                <div class="map-preview-footer">
+                    <div class="legend-item"><span class="legend-dot" style="background:#2ecc71;"></span> Sawah</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#e67e22;"></span> Permukiman</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#3498db;"></span> Sungai</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#9b59b6;"></span> Status Hak</div>
+                </div>
+            </div>
+        </div>
+        <div class="floating-info-chip chip-1">
+            <i class="fa fa-check-circle" style="color:#2ecc71;"></i>
+            <span>Data Terupdate</span>
+        </div>
+        <div class="floating-info-chip chip-2">
+            <i class="fa fa-layer-group" style="color:#ffc107;"></i>
+            <span>Multi-Layer GIS</span>
+        </div>
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <div class="scroll-mouse">
+            <div class="scroll-wheel"></div>
+        </div>
+        <span>Scroll</span>
+    </div>
+</section>
+
+<!-- ===== LAYANAN CEPAT ===== -->
+<section class="quick-services">
+    <div class="container">
+        <div class="qs-grid">
+            <a href="map.html" class="qs-card">
+                <div class="qs-icon" style="--ic:#1765c4;">
+                    <i class="fa fa-map-marked-alt"></i>
+                </div>
+                <h3>Peta Interaktif</h3>
+                <p>Navigasi & eksplorasi data spasial bidang tanah dan penggunaan lahan</p>
+                <span class="qs-arrow"><i class="fa fa-arrow-right"></i></span>
+            </a>
+            <a href="#" class="qs-card">
+                <div class="qs-icon" style="--ic:#2ecc71;">
+                    <i class="fa fa-vector-square"></i>
+                </div>
+                <h3>Cek Bidang Tanah</h3>
+                <p>Verifikasi status dan informasi hak atas bidang tanah terdaftar</p>
+                <span class="qs-arrow"><i class="fa fa-arrow-right"></i></span>
+            </a>
+            <a href="#" class="qs-card">
+                <div class="qs-icon" style="--ic:#e67e22;">
+                    <i class="fa fa-file-alt"></i>
+                </div>
+                <h3>Data Penggunaan Lahan</h3>
+                <p>Informasi klasifikasi dan distribusi penggunaan lahan wilayah</p>
+                <span class="qs-arrow"><i class="fa fa-arrow-right"></i></span>
+            </a>
+            <a href="https://drive.google.com/drive/u/2/folders/1l1m3zVYWx1L0dCqM16SQrdQJWQw67SRI" target="_blank" class="qs-card">
+                <div class="qs-icon" style="--ic:#9b59b6;">
+                    <i class="fa fa-download"></i>
+                </div>
+                <h3>Unduh Data & Peta</h3>
+                <p>Akses dan unduh dataset spasial serta produk peta wilayah</p>
+                <span class="qs-arrow"><i class="fa fa-arrow-right"></i></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TENTANG ===== -->
+<section class="tentang" id="tentang">
+    <div class="container">
+        <div class="tentang-grid">
+            <div class="tentang-visual">
+                <div class="tv-main-card">
+                    <div class="tv-card-header">
+                        <i class="fa fa-map" style="color:#ffc107; font-size:24px;"></i>
+                        <span>Wilayah Penelitian</span>
+                    </div>
+                    <div class="tv-info-rows">
+                        <div class="tv-row">
+                            <span class="tv-label">Desa</span>
+                            <span class="tv-value">Karangdowo</span>
+                        </div>
+                        <div class="tv-row">
+                            <span class="tv-label">Kecamatan</span>
+                            <span class="tv-value">Karangdowo</span>
+                        </div>
+                        <div class="tv-row">
+                            <span class="tv-label">Kabupaten</span>
+                            <span class="tv-value">Klaten</span>
+                        </div>
+                        <div class="tv-row">
+                            <span class="tv-label">Provinsi</span>
+                            <span class="tv-value">Jawa Tengah</span>
+                        </div>
+                        <div class="tv-row">
+                            <span class="tv-label">Luas Wilayah</span>
+                            <span class="tv-value">152,33 Ha</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tv-side-card tv-side-1">
+                    <i class="fa fa-database" style="color:#2ecc71;"></i>
+                    <div>
+                        <strong>PostgreSQL / PostGIS</strong>
+                        <p>Database Spasial</p>
+                    </div>
+                </div>
+                <div class="tv-side-card tv-side-2">
+                    <i class="fa fa-server" style="color:#3498db;"></i>
+                    <div>
+                        <strong>GeoServer WMS</strong>
+                        <p>Map Server</p>
+                    </div>
+                </div>
+                <div class="tv-side-card tv-side-3">
+                    <i class="fa fa-globe" style="color:#e67e22;"></i>
+                    <div>
+                        <strong>Leaflet.js</strong>
+                        <p>WebGIS Engine</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tentang-content">
+                <div class="section-eyebrow">Tentang Proyek</div>
+                <h2 class="section-title">Sistem Informasi <em>Pertanahan</em> Karangdowo</h2>
+                <p class="tentang-desc">
+                    Sistem Informasi Pertanahan Kecamatan Karangdowo adalah portal WebGIS yang menyajikan data 
+                    Bidang Tanah dan Peta Penggunaan Lahan secara interaktif. Portal ini dibangun sebagai 
+                    proyek Sistem Informasi Pertanahan kelompok B4 berbasis 
+                    teknologi geospasial modern.
+                </p>
+                <div class="tentang-features">
+                    <div class="tf-item">
+                        <div class="tf-icon"><i class="fa fa-check"></i></div>
+                        <div>
+                            <strong>Peta Interaktif Multi-Layer</strong>
+                            <p>Navigasi dan eksplorasi data spasial bidang tanah dan penggunaan lahan</p>
+                        </div>
+                    </div>
+                    <div class="tf-item">
+                        <div class="tf-icon"><i class="fa fa-check"></i></div>
+                        <div>
+                            <strong>Integrasi GeoServer WMS</strong>
+                            <p>Data disajikan melalui Web Map Service dengan teknologi GeoServer</p>
+                        </div>
+                    </div>
+                    <div class="tf-item">
+                        <div class="tf-icon"><i class="fa fa-check"></i></div>
+                        <div>
+                            <strong>GetFeatureInfo pada Klik</strong>
+                            <p>Klik bidang tanah untuk melihat atribut detail kepemilikan dan status hak</p>
+                        </div>
+                    </div>
+                    <!-- <div class="tf-item">
+                        <div class="tf-icon"><i class="fa fa-check"></i></div>
+                        <div>
+                            <strong>Ekspor & Unduh Data</strong>
+                            <p>Tersedia akses unduh dataset dan produk peta dalam berbagai format</p>
+                        </div>
+                    </div> -->
+                </div>
+                <a href="map.html" class="btn-cta">
+                    Buka Peta Interaktif <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATISTIK ===== -->
+<section class="statistik" id="statistik">
+    <div class="statistik-bg-decoration"></div>
+    <div class="container">
+        <div class="section-header-center">
+            <div class="section-eyebrow light">Data & Statistik</div>
+            <h2 class="section-title light">Informasi <em>Pertanahan</em> Karangdowo</h2>
+            <p class="section-subtitle light">Data terkini bidang tanah dan penggunaan lahan Kecamatan Karangdowo</p>
+        </div>
+
+        <div class="stat-cards-grid">
+            <div class="stat-card sc-blue">
+                <div class="sc-icon"><i class="fa fa-th-large"></i></div>
+                <div class="sc-num" data-target="1540">0</div>
+                <div class="sc-label">Jumlah Bidang</div>
+                <div class="sc-bar"><div class="sc-bar-fill" style="width:90%"></div></div>
+                <div class="sc-note">dari estimasi total</div>
+            </div>
+            <div class="stat-card sc-green">
+                <div class="sc-icon"><i class="fa fa-map"></i></div>
+                <div class="sc-num">152,33</div>
+                <div class="sc-label">Luas Wilayah (Ha)</div>
+                <div class="sc-bar"><div class="sc-bar-fill" style="width:50%"></div></div>
+                <div class="sc-note">terukur & terverifikasi</div>
+            </div>
+            <div class="stat-card sc-gold">
+                <div class="sc-icon"><i class="fa fa-user"></i></div>
+                <div class="sc-num" data-target="1460">0</div>
+                <div class="sc-label">Pemilik Terdaftar</div>
+                <div class="sc-bar"><div class="sc-bar-fill" style="width:80%"></div></div>
+                <div class="sc-note">data aktif terverifikasi</div>
+            </div>
+            <div class="stat-card sc-purple">
+                <div class="sc-icon"><i class="fa fa-check-circle"></i></div>
+                <div class="sc-num" data-target="95" data-suffix="%">0</div>
+                <div class="sc-label">Bidang Terpetakan</div>
+                <div class="sc-bar"><div class="sc-bar-fill" style="width:95%"></div></div>
+                <div class="sc-note">tingkat kelengkapan data</div>
+            </div>
+        </div>
+
+        <div class="penggunaan-lahan-grid">
+            <div class="pl-card">
+                <div class="pl-header">
+                    <h3>Distribusi Penggunaan Lahan</h3>
+                    <span>Desa Karangdowo</span>
+                </div>
+                <div class="pl-items">
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#2ecc71;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Lahan Sawah</span>
+                            <span class="pl-pct">61.2%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:61.2%; background:#2ecc71;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#e67e22;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Permukiman</span>
+                            <span class="pl-pct">27.5%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:27.5%; background:#e67e22;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#3498db;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Badan Air / Sungai</span>
+                            <span class="pl-pct">5.8%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:5.8%; background:#3498db;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#8e44ad;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Lainnya</span>
+                            <span class="pl-pct">5.5%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:5.5%; background:#8e44ad;"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="pl-card">
+                <div class="pl-header">
+                    <h3>Status Hak Atas Tanah</h3>
+                    <span>Rekapitulasi 2024</span>
+                </div>
+                <div class="pl-items">
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#1765c4;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Hak Milik (HM)</span>
+                            <span class="pl-pct">72%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:78.3%; background:#1765c4;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#e74c3c;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Hak Guna Bangunan (HGB)</span>
+                            <span class="pl-pct">4%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:4%; background:#e74c3c;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#f39c12;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Hak Pakai</span>
+                            <span class="pl-pct">13%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:13%; background:#f39c12;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#95a5a6;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Kosong</span>
+                            <span class="pl-pct">8%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:8%; background:#95a5a6;"></div></div>
+                    </div>
+                    <div class="pl-item">
+                        <div class="pl-dot" style="background:#13e4f3;"></div>
+                        <div class="pl-info">
+                            <span class="pl-name">Hak Wakaf</span>
+                            <span class="pl-pct">3%</span>
+                        </div>
+                        <div class="pl-prog-bar"><div class="pl-prog-fill" style="width:3%; background:#13e4f3;"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FITUR GIS ===== -->
+<section class="fitur-gis">
+    <div class="container">
+        <div class="section-header-center">
+            <div class="section-eyebrow">Fitur Platform</div>
+            <h2 class="section-title">Kemampuan <em>WebGIS</em> Kami</h2>
+        </div>
+        <div class="fitur-grid">
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#1765c4;">
+                    <i class="fa fa-layer-group"></i>
+                </div>
+                <h3>Multi Layer</h3>
+                <p>Tampilkan dan sembunyikan layer Bidang Tanah, Penggunaan Lahan, dan Kantor secara independen</p>
+            </div>
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#2ecc71;">
+                    <i class="fa fa-search-location"></i>
+                </div>
+                <h3>Pencarian Cepat</h3>
+                <p>Cari lokasi desa, kantor, atau bidang tanah langsung dari panel pencarian</p>
+            </div>
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#e67e22;">
+                    <i class="fa fa-mouse-pointer"></i>
+                </div>
+                <h3>GetFeatureInfo</h3>
+                <p>Klik sembarang bidang tanah untuk melihat atribut lengkap dari GeoServer</p>
+            </div>
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#9b59b6;">
+                    <i class="fa fa-satellite"></i>
+                </div>
+                <h3>Basemap Beragam</h3>
+                <p>Pilih antara OpenStreetMap atau Citra Satelit Google sebagai basemap</p>
+            </div>
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#e74c3c;">
+                    <i class="fa fa-list"></i>
+                </div>
+                <h3>Legenda Dinamis</h3>
+                <p>Legenda warna penggunaan lahan dan status hak tanah langsung dari GeoServer</p>
+            </div>
+            <div class="fitur-card">
+                <div class="fitur-icon-wrap" style="--fc:#f39c12;">
+                    <i class="fa fa-mobile-alt"></i>
+                </div>
+                <h3>Responsif</h3>
+                <p>Akses WebGIS dari perangkat apa pun — desktop, tablet, maupun smartphone</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== KEGIATAN ===== -->
+<section class="kegiatan" id="kegiatan">
+    <div class="container">
+        <div class="section-header-center">
+            <div class="section-eyebrow">Dokumentasi Lapangan</div>
+            <h2 class="section-title">Kegiatan <em>Kelompok B4</em></h2>
+            <p class="section-subtitle">Dokumentasi kegiatan mahasiswa dalam pelaksanaan studio survei dan pemetaan penggunaan lahan Kecamatan Karangdowo</p>
+        </div>
+
+        <div class="kegiatan-grid">
+            <div class="kg-card kg-featured">
+                <div class="kg-img-wrap">
+                    <img src="image/FOTO3.jpeg" alt="Survei Lapangan" loading="lazy">
+                    <div class="kg-overlay">
+                        <div class="kg-tag">Survei Lapangan</div>
+                        <h3>Pengukuran & Pemetaan Bidang Tanah</h3>
+                        <p>Tim kelompok B4 melakukan pengukuran lapangan menggunakan Total Station</p>
+                    </div>
+                </div>
+            </div>
+            <div class="kg-card">
+                <div class="kg-img-wrap">
+                    <img src="image/FOTO2.jpeg" alt="Analisis Data" loading="lazy">
+                    <div class="kg-overlay">
+                        <div class="kg-tag">Analisis GIS</div>
+                        <h3>Pengolahan Data Spasial</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="kg-card">
+                <div class="kg-img-wrap">
+                    <img src="image/FOTO5.jpeg" alt="Diskusi" loading="lazy">
+                    <div class="kg-overlay">
+                        <div class="kg-tag">Studio</div>
+                        <h3>Diskusi & Asistensi</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="kg-card">
+                <div class="kg-img-wrap">
+                    <img src="image/FOTO1.jpeg" alt="Tim" loading="lazy">
+                    <div class="kg-overlay">
+                        <div class="kg-tag">Tim</div>
+                        <h3>Foto Bersama Tim B4</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== BERITA ===== -->
+<section class="berita">
+    <div class="container">
+        <div class="berita-header">
+            <div>
+                <div class="section-eyebrow">Informasi</div>
+                <h2 class="section-title">Berita & <em>Pengumuman</em></h2>
+            </div>
+            <a href="#" class="btn-outline-small">Lihat Semua <i class="fa fa-arrow-right"></i></a>
+        </div>
+        <div class="berita-grid">
+            <article class="berita-card berita-featured">
+                <div class="bc-img-wrap">
+                    <img src="image/FOTO7.jpeg" alt="Pemutakhiran" loading="lazy">
+                    <div class="bc-category">Pengumuman</div>
+                </div>
+                <div class="bc-body">
+                    <div class="bc-date"><i class="fa fa-calendar"></i> 10 Mei 2045</div>
+                    <h3>Pemutakhiran Peta Bidang Tanah Kecamatan Karangdowo Tahun 2045</h3>
+                    <p>Data bidang tanah telah diperbarui berdasarkan hasil survei terbaru yang mencakup seluruh 19 desa di Kecamatan Karangdowo.</p>
+                    <a href="#" class="bc-read-more">Baca Selengkapnya <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </article>
+            <article class="berita-card">
+                <div class="bc-img-wrap">
+                    <img src="image/FOTO8.jpeg" alt="Layanan" loading="lazy">
+                    <div class="bc-category">Layanan</div>
+                </div>
+                <div class="bc-body">
+                    <div class="bc-date"><i class="fa fa-calendar"></i> 2 Mei 2045</div>
+                    <h3>Layanan Informasi Pertanahan Kini Lebih Mudah Diakses</h3>
+                    <p>Portal WebGIS kini dapat diakses dari perangkat mobile.</p>
+                    <a href="#" class="bc-read-more">Baca Selengkapnya <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </article>
+            <article class="berita-card">
+                <div class="bc-img-wrap">
+                    <img src="image/FOTO6.jpeg" alt="Pelatihan" loading="lazy">
+                    <div class="bc-category">Kegiatan</div>
+                </div>
+                <div class="bc-body">
+                    <div class="bc-date"><i class="fa fa-calendar"></i> 15 April 2045</div>
+                    <h3>Pelatihan Penggunaan Sistem Informasi Pertanahan</h3>
+                    <p>Sosialisasi dan pelatihan sistem informasi bagi perangkat desa.</p>
+                    <a href="#" class="bc-read-more">Baca Selengkapnya <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="cta-section">
+    <div class="cta-orb cta-orb-1"></div>
+    <div class="cta-orb cta-orb-2"></div>
+    <div class="container">
+        <div class="cta-content">
+            <div class="section-eyebrow light">Siap Menjelajahi Peta?</div>
+            <h2>Akses WebGIS Karangdowo <em>Sekarang!</em></h2>
+            <p>Jelajahi data spasial bidang tanah dan penggunaan lahan Kecamatan Karangdowo secara interaktif</p>
+            <a href="map.html" class="btn-cta-big">
+                <i class="fa-regular fa-map"></i>
+                Buka Peta Interaktif
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== KONTAK ===== -->
+<section class="kontak" id="kontak">
+    <div class="container">
+        <div class="section-header-center">
+            <div class="section-eyebrow">Hubungi Kami</div>
+            <h2 class="section-title">Kontak & <em>Informasi</em></h2>
+        </div>
+        <div class="kontak-grid">
+            <div class="kontak-card">
+                <div class="kontak-icon" style="background:#1765c4;"><i class="fa fa-building"></i></div>
+                <h3>Kantor Kecamatan</h3>
+                <p>Jl. Raya Pedan-Karangdowo No. 1<br>Karangdowo, Klaten, Jawa Tengah</p>
+            </div>
+            <div class="kontak-card">
+                <div class="kontak-icon" style="background:#2ecc71;"><i class="fa fa-envelope"></i></div>
+                <h3>Email</h3>
+                <p>sipb4@karangdowo.go.id</p>
+                <a href="mailto:sipb4@karangdowo.go.id" class="kontak-link">Kirim Email</a>
+            </div>
+            <div class="kontak-card">
+                <div class="kontak-icon" style="background:#e67e22;"><i class="fa fa-phone"></i></div>
+                <h3>Telepon</h3>
+                <p>(0272) 123456</p>
+                <a href="tel:0272123456" class="kontak-link">Hubungi Kami</a>
+            </div>
+            <div class="kontak-card">
+                <div class="kontak-icon" style="background:#9b59b6;"><i class="fa fa-clock"></i></div>
+                <h3>Jam Operasional</h3>
+                <p>24/7<br></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <i class="fa fa-globe-asia" style="color:#ffc107; font-size:32px;"></i>
+                    <div>
+                        <span class="footer-brand-sub">Sistem Informasi Pertanahan</span>
+                        <span class="footer-brand-name">Karangdowo</span>
+                    </div>
+                </div>
+                <p>Portal Geospasial berbasis WebGIS untuk pemetaan Bidang Tanah dan Penggunaan Lahan Desa Karangdowo, Kabupaten Klaten, Jawa Tengah.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>Navigasi</h4>
+                <ul>
+                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#tentang">Tentang</a></li>
+                    <li><a href="#statistik">Data & Statistik</a></li>
+                    <li><a href="#kegiatan">Kegiatan</a></li>
+                    <li><a href="#kontak">Kontak</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-col">
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="map.html">Peta Interaktif</a></li>
+                    <li><a href="BIDANG.html">Cek Bidang Tanah</a></li>
+                    <li><a href="map.html">Data Penggunaan Lahan</a></li>
+                    <li><a href="https://drive.google.com/drive/u/2/folders/1l1m3zVYWx1L0dCqM16SQrdQJWQw67SRI">Unduh Data & Peta</a></li>
+                    <!-- <li><a href="#">Pengajuan Layanan</a></li> -->
+                </ul>
+            </div>
+            <div class="footer-links-col">
+                <h4>Teknologi</h4>
+                <ul>
+                    <li><a href="#">GeoServer WMS</a></li>
+                    <li><a href="#">Leaflet.js</a></li>
+                    <li><a href="#">PostGIS</a></li>
+                    <li><a href="#">OpenStreetMap</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Kelompok B4 — Sistem Informasi Pertanahan Karangdowo</span>
+            <span>Dibangun dengan <i class="fa fa-heart" style="color:#e74c3c;"></i> untuk Karangdowo</span>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

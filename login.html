@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — SIP Karangdowo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body class="login-body">
+
+    <!-- Background decorations -->
+    <div class="login-bg-grid"></div>
+    <div class="login-orb login-orb-1"></div>
+    <div class="login-orb login-orb-2"></div>
+    <div class="login-orb login-orb-3"></div>
+
+    <div class="login-wrapper">
+
+        <!-- Left Panel: Branding -->
+        <div class="login-panel-left">
+            <div class="lp-brand">
+                <div class="lp-logo-icon">
+                    <i class="fa fa-globe-asia"></i>
+                </div>
+                <div class="lp-brand-text">
+                    <span class="lp-brand-sub">Sistem Informasi Pertanahan</span>
+                    <span class="lp-brand-name">Karangdowo</span>
+                </div>
+            </div>
+
+            <div class="lp-content">
+                <h1 class="lp-title">Selamat<br><em>Datang</em><br>Kembali</h1>
+                <p class="lp-desc">Masuk ke portal Web GIS Pertanahan Kecamatan Karangdowo untuk mengakses data spasial dan layanan informasi pertanahan.</p>
+            </div>
+
+            <!-- Role explanation cards -->
+            <div class="lp-features">
+                <div class="lp-feature-item">
+                    <div class="lp-feature-icon" style="background: rgba(255,193,7,0.15);">
+                        <i class="fa fa-user-shield" style="color: #ffc107;"></i>
+                    </div>
+                    <div>
+                        <span class="lp-feature-label">Administrator</span>
+                        <span class="lp-feature-sub">Kelola layer, edit & tambah data peta</span>
+                    </div>
+                </div>
+                <div class="lp-feature-item">
+                    <div class="lp-feature-icon" style="background: rgba(23,101,196,0.2);">
+                        <i class="fa fa-user" style="color: #5aa6ff;"></i>
+                    </div>
+                    <div>
+                        <span class="lp-feature-label">Pengguna Terdaftar</span>
+                        <span class="lp-feature-sub">Akses & lihat data spasial lengkap</span>
+                    </div>
+                </div>
+                <div class="lp-feature-item">
+                    <div class="lp-feature-icon" style="background: rgba(255,255,255,0.07);">
+                        <i class="fa fa-user-circle" style="color: #aaa;"></i>
+                    </div>
+                    <div>
+                        <span class="lp-feature-label">Tamu</span>
+                        <span class="lp-feature-sub">Akses terbatas, tanpa akun</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lp-footer-note">
+                <i class="fa fa-shield-alt"></i>
+                Sistem dilindungi enkripsi SSL/TLS
+            </div>
+        </div>
+
+        <!-- Right Panel: Login Form -->
+        <div class="login-panel-right">
+            <div class="login-card">
+
+                <!-- Tab Switcher -->
+                <div class="login-tabs">
+                    <button class="login-tab active" id="tab-login" onclick="switchTab('login')">Masuk</button>
+                    <button class="login-tab" id="tab-register" onclick="switchTab('register')">Daftar</button>
+                </div>
+
+                <!-- ====== LOGIN FORM ====== -->
+                <div class="login-form-section" id="section-login">
+                    <div class="form-header">
+                        <h2 class="form-title">Masuk ke Akun</h2>
+                        <p class="form-subtitle">Gunakan akun yang telah didaftarkan</p>
+                    </div>
+
+                    <!-- Role info notice -->
+                    <div class="role-notice">
+                        <div class="role-notice-item role-admin">
+                            <i class="fa fa-user-shield"></i>
+                            <span>Administrator &mdash; gunakan akun yang telah disediakan</span>
+                        </div>
+                        <div class="role-notice-item role-user">
+                            <i class="fa fa-user"></i>
+                            <span>Pengguna &mdash; daftar atau gunakan akun yang sudah ada</span>
+                        </div>
+                    </div>
+
+                    <div id="login-alert" class="form-alert" style="display:none;"></div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="login-username">
+                            <i class="fa fa-user"></i> Username / Email
+                        </label>
+                        <div class="input-wrap">
+                            <input
+                                type="text"
+                                id="login-username"
+                                class="form-input"
+                                placeholder="Masukkan username atau email"
+                                autocomplete="username"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">
+                            <i class="fa fa-lock"></i> Password
+                        </label>
+                        <div class="input-wrap">
+                            <input
+                                type="password"
+                                id="login-password"
+                                class="form-input"
+                                placeholder="Masukkan password"
+                                autocomplete="current-password"
+                            >
+                            <button class="toggle-pw" type="button" onclick="togglePassword('login-password', this)" title="Tampilkan password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-row-space">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember-me">
+                            <span class="checkbox-custom"></span>
+                            <span>Ingat saya</span>
+                        </label>
+                        <a href="#" class="forgot-link" onclick="showForgot(event)">Lupa password?</a>
+                    </div>
+
+                    <button class="btn-login" id="btn-login" onclick="handleLogin()">
+                        <span class="btn-login-text">
+                            <i class="fa fa-sign-in-alt"></i> Masuk
+                        </span>
+                        <span class="btn-login-loading" style="display:none;">
+                            <i class="fa fa-circle-notch fa-spin"></i> Memproses...
+                        </span>
+                    </button>
+
+                    <div class="form-divider"><span>atau</span></div>
+
+                    <button class="btn-guest" onclick="handleGuestLogin()">
+                        <i class="fa fa-user-circle"></i> Masuk sebagai Tamu
+                        <span class="btn-guest-note">(akses terbatas)</span>
+                    </button>
+
+                    <p class="form-switch-text">
+                        Belum memiliki akun?
+                        <a href="#" onclick="switchTab('register')">Daftar sekarang</a>
+                    </p>
+                </div>
+
+                <!-- ====== REGISTER FORM ====== -->
+                <div class="login-form-section" id="section-register" style="display:none;">
+                    <div class="form-header">
+                        <h2 class="form-title">Buat Akun Baru</h2>
+                        <p class="form-subtitle">Pendaftaran terbuka untuk akun <strong style="color:#5aa6ff;">Pengguna</strong></p>
+                    </div>
+
+                    <div id="register-alert" class="form-alert" style="display:none;"></div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="reg-name">
+                            <i class="fa fa-id-card"></i> Nama Lengkap
+                        </label>
+                        <div class="input-wrap">
+                            <input type="text" id="reg-name" class="form-input" placeholder="Masukkan nama lengkap">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="reg-email">
+                            <i class="fa fa-envelope"></i> Email
+                        </label>
+                        <div class="input-wrap">
+                            <input type="email" id="reg-email" class="form-input" placeholder="contoh@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="reg-password">
+                            <i class="fa fa-lock"></i> Password
+                        </label>
+                        <div class="input-wrap">
+                            <input type="password" id="reg-password" class="form-input" placeholder="Minimal 8 karakter">
+                            <button class="toggle-pw" type="button" onclick="togglePassword('reg-password', this)" title="Tampilkan password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="pw-strength-bar">
+                            <div class="pw-strength-fill" id="pw-strength-fill"></div>
+                        </div>
+                        <span class="pw-strength-label" id="pw-strength-label"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="reg-confirm">
+                            <i class="fa fa-lock"></i> Konfirmasi Password
+                        </label>
+                        <div class="input-wrap">
+                            <input type="password" id="reg-confirm" class="form-input" placeholder="Ulangi password">
+                            <button class="toggle-pw" type="button" onclick="togglePassword('reg-confirm', this)" title="Tampilkan password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <label class="remember-me" style="margin-bottom:20px;">
+                        <input type="checkbox" id="agree-terms">
+                        <span class="checkbox-custom"></span>
+                        <span>Saya setuju dengan <a href="#" style="color:var(--gold);">syarat &amp; ketentuan</a></span>
+                    </label>
+
+                    <button class="btn-login" id="btn-register" onclick="handleRegister()">
+                        <span class="btn-login-text">
+                            <i class="fa fa-user-plus"></i> Daftar Sekarang
+                        </span>
+                        <span class="btn-login-loading" style="display:none;">
+                            <i class="fa fa-circle-notch fa-spin"></i> Mendaftar...
+                        </span>
+                    </button>
+
+                    <p class="form-switch-text">
+                        Sudah punya akun?
+                        <a href="#" onclick="switchTab('login')">Masuk di sini</a>
+                    </p>
+                </div>
+
+                <!-- ====== FORGOT PASSWORD ====== -->
+                <div class="login-form-section" id="section-forgot" style="display:none;">
+                    <button class="back-btn" onclick="switchTab('login')">
+                        <i class="fa fa-arrow-left"></i> Kembali
+                    </button>
+
+                    <div class="form-header">
+                        <h2 class="form-title">Lupa Password?</h2>
+                        <p class="form-subtitle">Masukkan email Anda untuk reset password</p>
+                    </div>
+
+                    <div id="forgot-alert" class="form-alert" style="display:none;"></div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="forgot-email">
+                            <i class="fa fa-envelope"></i> Email Terdaftar
+                        </label>
+                        <div class="input-wrap">
+                            <input type="email" id="forgot-email" class="form-input" placeholder="contoh@email.com">
+                        </div>
+                    </div>
+
+                    <button class="btn-login" onclick="handleForgot()">
+                        <span class="btn-login-text">
+                            <i class="fa fa-paper-plane"></i> Kirim Link Reset
+                        </span>
+                        <span class="btn-login-loading" style="display:none;">
+                            <i class="fa fa-circle-notch fa-spin"></i> Mengirim...
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Back to site link -->
+                <a href="index.html" class="back-to-site">
+                    <i class="fa fa-arrow-left"></i> Kembali ke Beranda
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

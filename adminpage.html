@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin — SIP Karangdowo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0e1e30; --navy-mid: #112338; --navy-light: #1a3352;
+            --blue: #1765c4; --blue-light: #2980d9;
+            --gold: #ffc107; --gold-dark: #e0a800;
+            --green: #2ecc71; --green-dark: #27ae60;
+            --orange: #e67e22; --purple: #9b59b6; --red: #e74c3c;
+            --white: #ffffff;
+            --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1; --gray-500: #64748b; --gray-700: #334155; --gray-900: #0f172a;
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-ui: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --radius-sm: 8px; --radius: 14px; --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background: var(--gray-50); color: var(--gray-900); display: flex; height: 100vh; overflow: hidden; }
+        a { text-decoration: none; }
+        button { cursor: pointer; }
+
+        /* ===== SIDEBAR ===== */
+        .admin-sidebar {
+            width: 268px; background: var(--navy); color: white;
+            display: flex; flex-direction: column; flex-shrink: 0;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar-brand {
+            padding: 22px 20px; display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08); background: var(--navy-mid);
+        }
+        .brand-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--blue), var(--gold)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; flex-shrink: 0; }
+        .brand-sub { font-family: var(--font-ui); font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; }
+        .brand-name { font-family: var(--font-ui); font-size: 15px; font-weight: 800; color: white; line-height: 1.2; }
+        .sidebar-menu { list-style: none; padding: 20px 12px; flex: 1; }
+        .menu-section-label { font-family: var(--font-ui); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 12px 6px; }
+        .sidebar-menu li { margin-bottom: 3px; }
+        .menu-link {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            font-family: var(--font-ui); font-size: 13.5px; font-weight: 600;
+            color: rgba(255,255,255,0.6); border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .menu-link:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); }
+        .menu-link.active { background: rgba(23,101,196,0.25); color: var(--gold); border-left: 3px solid var(--gold); padding-left: 9px; }
+        .menu-link i { font-size: 15px; width: 18px; text-align: center; }
+        .menu-badge { margin-left: auto; background: var(--blue); color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; font-family: var(--font-ui); }
+        .menu-badge.gold { background: var(--gold); color: var(--navy); }
+        .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.04); margin-bottom: 8px; }
+        .sidebar-avatar { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--navy); font-size: 13px; font-weight: 700; flex-shrink: 0; }
+        .sidebar-user-info span { display: block; }
+        .sidebar-user-name { font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: white; }
+        .sidebar-user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+        .logout-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: rgba(231,76,60,0.8); font-family: var(--font-ui); font-weight: 600; font-size: 13px; border-radius: var(--radius-sm); transition: 0.2s; width: 100%; border: none; background: none; }
+        .logout-btn:hover { background: rgba(231,76,60,0.1); color: var(--red); }
+
+        /* ===== MAIN ===== */
+        .admin-main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-width: 0; }
+        .top-navbar {
+            height: 64px; background: white; border-bottom: 1px solid var(--gray-200);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 32px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-nav-left { display: flex; flex-direction: column; }
+        .top-nav-page { font-family: var(--font-ui); font-size: 16px; font-weight: 800; color: var(--navy); }
+        .top-nav-date { font-size: 12px; color: var(--gray-500); }
+        .top-nav-right { display: flex; align-items: center; gap: 16px; }
+        .nav-notif { width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid var(--gray-200); background: white; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 14px; position: relative; transition: 0.2s; }
+        .nav-notif:hover { border-color: var(--blue); color: var(--blue); }
+        .notif-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; position: absolute; top: 6px; right: 6px; border: 1.5px solid white; }
+        .save-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-family: var(--font-ui); font-weight: 600; color: var(--green-dark); background: rgba(46,204,113,0.1); padding: 6px 12px; border-radius: 20px; }
+        .save-status i { font-size: 11px; }
+        .content-wrapper { padding: 32px 36px; max-width: 1120px; margin: 0 auto; width: 100%; }
+
+        /* ===== TAB SWITCHING ===== */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: tabFade 0.35s ease; }
+        @keyframes tabFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== PAGE HEADERS ===== */
+        .page-header { margin-bottom: 28px; }
+        .section-eyebrow { font-family: var(--font-ui); font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 6px; }
+        .section-title { font-family: var(--font-display); font-size: 2rem; color: var(--gray-900); line-height: 1.15; }
+        .section-title em { color: var(--blue); font-style: italic; }
+        .page-header p { font-size: 14px; color: var(--gray-500); margin-top: 8px; line-height: 1.6; max-width: 600px; }
+
+        /* ===== CARDS ===== */
+        .admin-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title { font-family: var(--font-ui); font-size: 15px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--blue); }
+
+        /* ===== DASHBOARD STATS ===== */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); transition: 0.2s; }
+        .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .stat-info h3 { font-family: var(--font-ui); font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
+        .stat-info p { font-size: 12px; color: var(--gray-500); font-weight: 500; margin-top: 4px; }
+
+        /* ===== ACTIVITY LOG ===== */
+        .activity-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+        .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+        .activity-text { font-size: 13.5px; color: var(--gray-700); line-height: 1.5; flex: 1; }
+        .activity-text strong { color: var(--gray-900); font-weight: 600; }
+        .activity-time { font-size: 11px; color: var(--gray-500); white-space: nowrap; font-family: var(--font-ui); }
+
+        /* ===== UPLOAD ZONE ===== */
+        .upload-zone {
+            border: 2.5px dashed var(--gray-300); border-radius: var(--radius-lg);
+            padding: 48px 32px; text-align: center; transition: all 0.3s;
+            cursor: pointer; background: var(--gray-50); position: relative;
+        }
+        .upload-zone:hover, .upload-zone.drag-over {
+            border-color: var(--blue); background: rgba(23,101,196,0.04);
+        }
+        .upload-zone.drag-over { transform: scale(1.01); }
+        .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .upload-icon { width: 64px; height: 64px; background: linear-gradient(135deg, rgba(23,101,196,0.1), rgba(255,193,7,0.1)); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--blue); margin: 0 auto 16px; }
+        .upload-zone h3 { font-family: var(--font-ui); font-size: 16px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+        .upload-zone p { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+        .upload-zone .browse-link { color: var(--blue); font-weight: 600; }
+        .upload-formats { display: flex; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+        .format-tag { font-family: var(--font-ui); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(23,101,196,0.1); color: var(--blue); }
+
+        /* ===== FILE PREVIEW (after upload) ===== */
+        .file-preview { background: white; border: 1.5px solid var(--green); border-radius: var(--radius); padding: 20px; display: none; }
+        .file-preview.show { display: block; animation: tabFade 0.3s ease; }
+        .fp-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .fp-icon { width: 44px; height: 44px; background: rgba(46,204,113,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--green-dark); flex-shrink: 0; }
+        .fp-name { font-family: var(--font-ui); font-size: 14px; font-weight: 700; color: var(--gray-900); }
+        .fp-size { font-size: 12px; color: var(--gray-500); }
+        .fp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .fp-stat { background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+        .fp-stat-value { font-family: var(--font-ui); font-size: 20px; font-weight: 800; color: var(--navy); }
+        .fp-stat-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+        .fp-attrs { background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; }
+        .fp-attrs h4 { font-family: var(--font-ui); font-size: 12px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .attr-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .attr-tag { font-size: 12px; padding: 3px 10px; background: white; border: 1px solid var(--gray-200); border-radius: 20px; color: var(--gray-700); font-family: var(--font-ui); }
+        .fp-actions { display: flex; gap: 10px; }
+
+        /* ===== LAYER HISTORY TABLE ===== */
+        .layer-table-wrap { overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { font-family: var(--font-ui); font-size: 11px; font-weight: 700; color: var(--gray-500); background: var(--gray-50); border-bottom: 2px solid var(--gray-200); padding: 10px 14px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .admin-table td { padding: 13px 14px; border-bottom: 1px solid var(--gray-100); font-size: 13.5px; color: var(--gray-700); vertical-align: middle; }
+        .admin-table tr:hover td { background: var(--gray-50); }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .table-empty { text-align: center; padding: 40px; color: var(--gray-500); font-size: 13px; }
+        .table-empty i { font-size: 32px; display: block; margin-bottom: 10px; color: var(--gray-300); }
+
+        /* ===== STATUS BADGES ===== */
+        .badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-ui); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+        .badge-active { background: rgba(46,204,113,0.12); color: var(--green-dark); }
+        .badge-archived { background: var(--gray-100); color: var(--gray-500); }
+        .badge-pengumuman { background: rgba(255,193,7,0.15); color: #b38600; }
+        .badge-layanan { background: rgba(23,101,196,0.12); color: var(--blue); }
+        .badge-kegiatan { background: rgba(46,204,113,0.12); color: var(--green-dark); }
+        .badge-regulasi { background: rgba(155,89,182,0.12); color: var(--purple); }
+        .badge-berita { background: rgba(230,126,34,0.12); color: var(--orange); }
+
+        /* ===== BUTTONS ===== */
+        .btn { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-ui); font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .btn-primary { background: var(--blue); color: white; box-shadow: 0 4px 12px rgba(23,101,196,0.2); }
+        .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(23,101,196,0.3); }
+        .btn-gold { background: var(--gold); color: var(--navy); box-shadow: 0 4px 12px rgba(255,193,7,0.2); }
+        .btn-gold:hover { background: var(--gold-dark); transform: translateY(-1px); }
+        .btn-success { background: var(--green); color: white; box-shadow: 0 4px 12px rgba(46,204,113,0.2); }
+        .btn-success:hover { background: var(--green-dark); transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
+        .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+        .btn-danger { background: transparent; color: var(--red); border: 1.5px solid rgba(231,76,60,0.3); }
+        .btn-danger:hover { background: var(--red); color: white; }
+        .btn-sm { padding: 7px 14px; font-size: 12px; }
+        .btn-icon { width: 32px; height: 32px; border-radius: 7px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .btn-icon-edit { background: rgba(255,193,7,0.1); color: var(--gold-dark); }
+        .btn-icon-edit:hover { background: var(--gold); color: var(--navy); }
+        .btn-icon-delete { background: rgba(231,76,60,0.08); color: var(--red); }
+        .btn-icon-delete:hover { background: var(--red); color: white; }
+        .btn-icon-restore { background: rgba(23,101,196,0.1); color: var(--blue); }
+        .btn-icon-restore:hover { background: var(--blue); color: white; }
+        .btn-icon-download { background: rgba(46,204,113,0.1); color: var(--green-dark); }
+        .btn-icon-download:hover { background: var(--green); color: white; }
+
+        /* ===== FORM ===== */
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 7px; }
+        .form-label .required { color: var(--red); margin-left: 2px; }
+        .form-control { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; color: var(--gray-700); transition: 0.2s; background: white; }
+        .form-control:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23,101,196,0.08); }
+        .form-control::placeholder { color: var(--gray-300); }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        .form-note { font-size: 12px; color: var(--gray-500); margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray-100); }
+        .char-count { font-size: 11px; color: var(--gray-500); font-family: var(--font-ui); float: right; margin-top: 4px; }
+        .char-count.warn { color: var(--orange); }
+        .char-count.over { color: var(--red); }
+
+        /* ===== ALERT BOX ===== */
+        .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 13.5px; line-height: 1.5; }
+        .alert i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+        .alert-warning { background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); color: #7a5c00; }
+        .alert-warning i { color: var(--gold-dark); }
+        .alert-info { background: rgba(23,101,196,0.06); border: 1px solid rgba(23,101,196,0.2); color: var(--blue); }
+        .alert-success { background: rgba(46,204,113,0.08); border: 1px solid rgba(46,204,113,0.3); color: var(--green-dark); }
+        .alert-danger { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.25); color: #b42828; }
+
+        /* ===== PROGRESS BAR ===== */
+        .upload-progress { display: none; margin-top: 16px; }
+        .upload-progress.show { display: block; }
+        .progress-bar-wrap { background: var(--gray-100); border-radius: 100px; height: 8px; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-500); font-family: var(--font-ui); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(14,30,48,0.6); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.show { display: flex; animation: modalFadeIn 0.25s ease; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalSlideIn 0.3s ease; }
+        @keyframes modalSlideIn { from { transform: translateY(20px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        .modal-header { padding: 24px 28px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
+        .modal-title { font-family: var(--font-display); font-size: 1.4rem; color: var(--navy); }
+        .modal-close { width: 32px; height: 32px; border-radius: 7px; border: 1px solid var(--gray-200); background: white; color: var(--gray-500); font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .modal-close:hover { background: var(--gray-50); color: var(--gray-900); }
+        .modal-body { padding: 28px; }
+        .modal-lg { max-width: 780px; }
+
+        /* ===== IMAGE PREVIEW ===== */
+        .image-preview-wrap { border: 1.5px dashed var(--gray-200); border-radius: var(--radius-sm); overflow: hidden; height: 140px; display: flex; align-items: center; justify-content: center; background: var(--gray-50); margin-top: 8px; }
+        .image-preview-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview-placeholder { text-align: center; color: var(--gray-300); }
+        .image-preview-placeholder i { font-size: 28px; display: block; margin-bottom: 6px; }
+        .image-preview-placeholder span { font-size: 12px; }
+
+        /* ===== SEARCH & FILTER BAR ===== */
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .search-input-wrap { position: relative; flex: 1; min-width: 200px; }
+        .search-input-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-500); font-size: 13px; }
+        .search-input { width: 100%; padding: 10px 14px 10px 36px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 13.5px; color: var(--gray-700); transition: 0.2s; }
+        .search-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23,101,196,0.08); }
+        .filter-select { padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 13.5px; color: var(--gray-700); background: white; transition: 0.2s; }
+        .filter-select:focus { outline: none; border-color: var(--blue); }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        #toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { display: flex; align-items: center; gap: 12px; background: var(--navy); color: white; padding: 14px 18px; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 13px; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.35s ease; min-width: 280px; }
+        @keyframes toastIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.out { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastOut { to { transform: translateX(100px); opacity: 0; } }
+        .toast-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+        .toast-success .toast-icon { background: var(--green); }
+        .toast-error .toast-icon { background: var(--red); }
+        .toast-info .toast-icon { background: var(--blue); }
+        .toast-warning .toast-icon { background: var(--gold); color: var(--navy); }
+
+        /* ===== CONFIRM DIALOG ===== */
+        .confirm-dialog { max-width: 420px; }
+        .confirm-icon-wrap { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px; }
+
+        /* ===== NEWS ARTICLE PREVIEW ===== */
+        .article-img-preview { width: 100%; height: 180px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 12px; display: none; }
+        .article-img-preview.show { display: block; }
+
+        /* ===== TABLE ACTIONS ===== */
+        .header-action { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+
+        /* ===== PAGINATION ===== */
+        .pagination { display: flex; align-items: center; gap: 6px; margin-top: 16px; justify-content: flex-end; }
+        .page-btn { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--gray-200); background: white; color: var(--gray-700); font-family: var(--font-ui); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .page-btn:hover, .page-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+        .page-info { font-size: 12px; color: var(--gray-500); font-family: var(--font-ui); padding: 0 8px; }
+
+        /* ===== QUICK STATS ROW (Dashboard) ===== */
+        .dashboard-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+        .quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .quick-action-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-200); background: var(--gray-50); cursor: pointer; transition: 0.2s; text-align: left; }
+        .quick-action-btn:hover { border-color: var(--blue); background: rgba(23,101,196,0.04); }
+        .qa-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .qa-label { font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--gray-900); display: block; }
+        .qa-desc { font-size: 11px; color: var(--gray-500); display: block; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .admin-sidebar { width: 220px; }
+            .content-wrapper { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="admin-sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="fa fa-globe-asia"></i></div>
+        <div class="brand-text">
+            <span class="brand-sub">Admin Panel</span>
+            <span class="brand-name">SIP Karangdowo</span>
+        </div>
+    </div>
+    <ul class="sidebar-menu">
+        <li class="menu-section-label">Menu Utama</li>
+        <li>
+            <a href="#" class="menu-link active" data-target="dashboard">
+                <i class="fa fa-chart-pie"></i> Dashboard
+            </a>
+        </li>
+        <li class="menu-section-label">Data Spasial</li>
+        <li>
+            <a href="#" class="menu-link" data-target="upload-gis">
+                <i class="fa fa-map-marked-alt"></i> Upload Layer GeoJSON
+                <span class="menu-badge gold" id="badge-layers">0</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="menu-link" data-target="layer-history">
+                <i class="fa fa-history"></i> Riwayat Layer
+            </a>
+        </li>
+        <li class="menu-section-label">Konten Website</li>
+        <li>
+            <a href="#" class="menu-link" data-target="data-berita">
+                <i class="fa fa-newspaper"></i> Kelola Informasi/Berita
+                <span class="menu-badge" id="badge-berita">0</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">A</div>
+            <div class="sidebar-user-info">
+                <span class="sidebar-user-name">Admin B4</span>
+                <span class="sidebar-user-role">Karangdowo Staff</span>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">
+            <i class="fa fa-sign-out-alt"></i> Keluar Akun
+        </button>
+    </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="admin-main">
+    <header class="top-navbar">
+        <div class="top-nav-left">
+            <span class="top-nav-page" id="current-page-title">Dashboard</span>
+            <span class="top-nav-date" id="current-date"></span>
+        </div>
+        <div class="top-nav-right">
+            <div class="save-status" id="save-status"><i class="fa fa-circle-check"></i> Data tersimpan</div>
+            <button class="nav-notif" id="notif-btn" title="Notifikasi">
+                <i class="fa fa-bell"></i>
+                <span class="notif-dot" id="notif-dot" style="display:none"></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+
+        <!-- ========================= DASHBOARD ========================= -->
+        <div id="dashboard" class="tab-content active">
+            <div class="page-header">
+                <div class="section-eyebrow">Ringkasan Sistem</div>
+                <h1 class="section-title">Dashboard <em>Admin</em></h1>
+                <p>Pantau kondisi data spasial dan konten website SIP Karangdowo secara real-time.</p>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(23,101,196,0.1);color:var(--blue)">
+                        <i class="fa fa-map"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-features">—</h3>
+                        <p>Total Fitur Spasial</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(255,193,7,0.1);color:var(--gold-dark)">
+                        <i class="fa fa-layer-group"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-layers">0</h3>
+                        <p>Layer Terupload</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(46,204,113,0.1);color:var(--green-dark)">
+                        <i class="fa fa-newspaper"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-berita">0</h3>
+                        <p>Artikel / Berita Aktif</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(155,89,182,0.1);color:var(--purple)">
+                        <i class="fa fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-last-update" style="font-size:14px;margin-top:5px;">—</h3>
+                        <p>Update Terakhir</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Activity Log -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <span class="card-title"><i class="fa fa-list-check"></i> Aktivitas Terbaru</span>
+                    </div>
+                    <ul class="activity-list" id="activity-log">
+                        <li class="activity-item">
+                            <span class="activity-dot" style="background:var(--gray-300)"></span>
+                            <span class="activity-text" style="color:var(--gray-500)">Belum ada aktivitas tercatat.</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Quick Actions -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <span class="card-title"><i class="fa fa-bolt"></i> Aksi Cepat</span>
+                    </div>
+                    <div class="quick-actions-grid">
+                        <button class="quick-action-btn" onclick="switchTab('upload-gis')">
+                            <div class="qa-icon" style="background:rgba(23,101,196,0.1);color:var(--blue)"><i class="fa fa-upload"></i></div>
+                            <div>
+                                <span class="qa-label">Upload Layer</span>
+                                <span class="qa-desc">Perbarui file GeoJSON</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('data-berita'); setTimeout(() => openBeritaModal(), 200)">
+                            <div class="qa-icon" style="background:rgba(255,193,7,0.1);color:var(--gold-dark)"><i class="fa fa-plus"></i></div>
+                            <div>
+                                <span class="qa-label">Tambah Berita</span>
+                                <span class="qa-desc">Buat artikel baru</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('layer-history')">
+                            <div class="qa-icon" style="background:rgba(46,204,113,0.1);color:var(--green-dark)"><i class="fa fa-history"></i></div>
+                            <div>
+                                <span class="qa-label">Riwayat Layer</span>
+                                <span class="qa-desc">Lihat versi sebelumnya</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="exportAllData()">
+                            <div class="qa-icon" style="background:rgba(155,89,182,0.1);color:var(--purple)"><i class="fa fa-download"></i></div>
+                            <div>
+                                <span class="qa-label">Export Data</span>
+                                <span class="qa-desc">Unduh backup JSON</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Layer Status -->
+                    <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--gray-100);">
+                        <div class="card-title" style="margin-bottom:12px;"><i class="fa fa-map"></i> Layer Aktif</div>
+                        <div id="active-layer-info">
+                            <div style="text-align:center;padding:20px;color:var(--gray-400);">
+                                <i class="fa fa-map" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+                                <span style="font-size:13px;">Belum ada layer yang diupload</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= UPLOAD GIS ========================= -->
+        <div id="upload-gis" class="tab-content">
+            <div class="page-header">
+                <div class="section-eyebrow">Pembaruan Spasial</div>
+                <h1 class="section-title">Upload Layer <em>GeoJSON</em></h1>
+                <p>Unggah file GeoJSON hasil export dari QGIS (qgis2web). File baru akan menjadi layer aktif di WebGIS.</p>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fa fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Peringatan:</strong> Mengunggah file baru akan <strong>menggantikan</strong> layer aktif saat ini. Pastikan semua atribut (Nama Pemilik, Luas, Status) sudah divalidasi di QGIS sebelum upload. Layer lama tetap tersimpan di Riwayat.
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fa fa-cloud-upload-alt"></i> Unggah File Layer Baru</span>
+                </div>
+
+                <!-- Drop Zone -->
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" id="geojson-file-input" accept=".geojson,.json" multiple>
+                    <div class="upload-icon"><i class="fa fa-file-code"></i></div>
+                    <h3>Seret & Lepas File GeoJSON di Sini</h3>
+                    <p>atau <span class="browse-link">klik untuk memilih file</span> dari komputer Anda</p>
+                    <div class="upload-formats">
+                        <span class="format-tag">.geojson</span>
+                        <span class="format-tag">.json</span>
+                        <span class="format-tag">Max 50 MB</span>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="upload-progress" id="upload-progress">
+                    <div class="progress-label">
+                        <span id="progress-text">Memproses file...</span>
+                        <span id="progress-pct">0%</span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- File Preview -->
+                <div class="file-preview" id="file-preview">
+                    <div class="fp-header">
+                        <div class="fp-icon"><i class="fa fa-file-code"></i></div>
+                        <div>
+                            <div class="fp-name" id="fp-filename">—</div>
+                            <div class="fp-size" id="fp-filesize">—</div>
+                        </div>
+                        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+                            <span class="badge badge-active"><i class="fa fa-circle-check"></i> Valid GeoJSON</span>
+                        </div>
+                    </div>
+                    <div class="fp-stats">
+                        <div class="fp-stat">
+                            <div class="fp-stat-value" id="fp-features">0</div>
+                            <div class="fp-stat-label">Total Fitur</div>
+                        </div>
+                        <div class="fp-stat">
+                            <div class="fp-stat-value" id="fp-geomtype">—</div>
+                            <div class="fp-stat-label">Tipe Geometri</div>
+                        </div>
+                        <div class="fp-stat">
+                            <div class="fp-stat-value" id="fp-attrs-count">0</div>
+                            <div class="fp-stat-label">Atribut</div>
+                        </div>
+                    </div>
+                    <div class="fp-attrs">
+                        <h4>Daftar Atribut</h4>
+                        <div class="attr-tags" id="fp-attr-tags"></div>
+                    </div>
+                    <div class="fp-actions">
+                        <button class="btn btn-outline" onclick="resetUpload()"><i class="fa fa-redo"></i> Ganti File</button>
+                        <button class="btn btn-primary" id="btn-commit-upload" onclick="commitUpload()">
+                            <i class="fa fa-cloud-upload-alt"></i> Simpan & Aktifkan Layer Ini
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer Name + Notes -->
+            <div class="admin-card" id="layer-meta-form" style="display:none;">
+                <div class="card-title" style="margin-bottom:16px;"><i class="fa fa-tag"></i> Informasi Layer</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nama Layer <span class="required">*</span></label>
+                        <input type="text" id="layer-name-input" class="form-control" placeholder="contoh: Bidang Tanah Karangdowo 2025">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Versi / Tanggal Survei</label>
+                        <input type="text" id="layer-version-input" class="form-control" placeholder="contoh: Mei 2025">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Catatan (opsional)</label>
+                    <textarea id="layer-notes-input" class="form-control" rows="2" placeholder="Deskripsi singkat perubahan atau pembaruan pada layer ini..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= LAYER HISTORY ========================= -->
+        <div id="layer-history" class="tab-content">
+            <div class="page-header">
+                <div class="section-eyebrow">Riwayat Spasial</div>
+                <h1 class="section-title">Riwayat <em>Layer</em></h1>
+                <p>Semua versi layer GeoJSON yang pernah diupload. Layer aktif ditandai dengan badge hijau.</p>
+            </div>
+
+            <div class="admin-card" style="padding:0;overflow:hidden;">
+                <div style="padding:20px 24px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center;">
+                    <span class="card-title"><i class="fa fa-layer-group"></i> Semua Versi Layer</span>
+                    <button class="btn btn-danger btn-sm" onclick="clearLayerHistory()"><i class="fa fa-trash"></i> Bersihkan Riwayat</button>
+                </div>
+                <div class="layer-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Nama Layer</th>
+                                <th>Fitur</th>
+                                <th>Tipe Geometri</th>
+                                <th>Ukuran</th>
+                                <th>Waktu Upload</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="layer-history-tbody">
+                            <tr>
+                                <td colspan="7" class="table-empty">
+                                    <i class="fa fa-layer-group"></i>
+                                    Belum ada layer yang diupload.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= DATA BERITA ========================= -->
+        <div id="data-berita" class="tab-content">
+            <div class="header-action">
+                <div class="page-header" style="margin-bottom:0;">
+                    <div class="section-eyebrow">Konten Website</div>
+                    <h1 class="section-title">Kelola <em>Informasi & Berita</em></h1>
+                </div>
+                <button class="btn btn-gold" onclick="openBeritaModal()">
+                    <i class="fa fa-plus"></i> Tambah Artikel
+                </button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="search-input-wrap">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="search-input" id="berita-search" placeholder="Cari judul atau konten artikel..." oninput="filterBerita()">
+                </div>
+                <select class="filter-select" id="berita-filter-kategori" onchange="filterBerita()">
+                    <option value="">Semua Kategori</option>
+                    <option value="Pengumuman">Pengumuman</option>
+                    <option value="Layanan">Layanan</option>
+                    <option value="Kegiatan">Kegiatan</option>
+                    <option value="Regulasi">Regulasi</option>
+                    <option value="Berita">Berita Umum</option>
+                </select>
+                <select class="filter-select" id="berita-filter-sort" onchange="filterBerita()">
+                    <option value="newest">Terbaru</option>
+                    <option value="oldest">Terlama</option>
+                    <option value="az">A–Z</option>
+                </select>
+            </div>
+
+            <div class="admin-card" style="padding:0;overflow:hidden;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width:120px">Kategori</th>
+                            <th>Judul Artikel</th>
+                            <th style="width:160px">Ringkasan</th>
+                            <th style="width:110px">Tanggal Tayang</th>
+                            <th style="width:90px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="berita-tbody">
+                        <tr>
+                            <td colspan="5" class="table-empty">
+                                <i class="fa fa-newspaper"></i>
+                                Belum ada artikel. Klik "Tambah Artikel" untuk memulai.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="berita-pagination"></div>
+        </div>
+
+    </div><!-- /.content-wrapper -->
+</main>
+
+<!-- ========================= MODAL: TAMBAH/EDIT BERITA ========================= -->
+<div class="modal-overlay" id="modal-berita">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-berita-title">Tambah Artikel Baru</h2>
+            <button class="modal-close" onclick="closeBeritaModal()"><i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="berita-edit-id">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Kategori <span class="required">*</span></label>
+                    <select class="form-control" id="berita-kategori">
+                        <option value="">— Pilih Kategori —</option>
+                        <option value="Pengumuman">Pengumuman</option>
+                        <option value="Layanan">Layanan</option>
+                        <option value="Kegiatan">Kegiatan</option>
+                        <option value="Regulasi">Regulasi</option>
+                        <option value="Berita">Berita Umum</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tanggal Tayang <span class="required">*</span></label>
+                    <input type="date" class="form-control" id="berita-tanggal">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Judul Artikel <span class="required">*</span></label>
+                <input type="text" class="form-control" id="berita-judul" placeholder="Masukkan judul artikel yang informatif..." maxlength="120" oninput="updateCharCount('berita-judul', 120, 'cc-judul')">
+                <div>
+                    <span class="form-note">Buat judul yang jelas dan menarik.</span>
+                    <span class="char-count" id="cc-judul">0/120</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ringkasan <span class="required">*</span></label>
+                <textarea class="form-control" id="berita-ringkasan" rows="2" placeholder="Ringkasan singkat artikel (tampil di kartu berita)..." maxlength="200" oninput="updateCharCount('berita-ringkasan', 200, 'cc-ringkasan')"></textarea>
+                <div>
+                    <span class="form-note">Maks 200 karakter. Ditampilkan sebagai preview di beranda.</span>
+                    <span class="char-count" id="cc-ringkasan">0/200</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Konten Lengkap</label>
+                <textarea class="form-control" id="berita-konten" rows="5" placeholder="Tulis isi artikel lengkap di sini..."></textarea>
+                <div class="form-note"><i class="fa fa-info-circle" style="color:var(--blue)"></i> Konten lengkap ditampilkan di halaman detail artikel.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL Gambar Sampul</label>
+                <input type="url" class="form-control" id="berita-gambar" placeholder="https://example.com/gambar.jpg" oninput="previewBeritaImage()">
+                <div class="form-note"><i class="fa fa-info-circle" style="color:var(--blue)"></i> Gunakan URL gambar dari CDN atau server yang sudah tersedia.</div>
+                <div class="image-preview-wrap" style="margin-top:10px;">
+                    <img id="berita-img-preview" src="" alt="" class="article-img-preview" onerror="this.style.display='none'">
+                    <div class="image-preview-placeholder" id="img-placeholder">
+                        <i class="fa fa-image"></i>
+                        <span>Preview gambar muncul di sini</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Penulis / Sumber</label>
+                <input type="text" class="form-control" id="berita-penulis" placeholder="contoh: Tim SIP Karangdowo">
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-outline" onclick="closeBeritaModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveBerita()"><i class="fa fa-save"></i> <span id="btn-save-label">Simpan Artikel</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================= MODAL: CONFIRM DELETE ========================= -->
+<div class="modal-overlay" id="modal-confirm">
+    <div class="modal confirm-dialog">
+        <div class="modal-body" style="text-align:center;padding:36px 28px;">
+            <div class="confirm-icon-wrap" style="background:rgba(231,76,60,0.1);color:var(--red)">
+                <i class="fa fa-trash"></i>
+            </div>
+            <h3 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:10px;" id="confirm-title">Hapus Item?</h3>
+            <p style="color:var(--gray-500);font-size:14px;line-height:1.6;" id="confirm-message">Tindakan ini tidak dapat dibatalkan.</p>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:24px;">
+                <button class="btn btn-outline" onclick="closeConfirmModal()">Batal</button>
+                <button class="btn btn-danger" id="confirm-action-btn" style="background:var(--red);color:white;border-color:var(--red)">
+                    <i class="fa fa-trash"></i> Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================= MODAL: VIEW ARTICLE ========================= -->
+<div class="modal-overlay" id="modal-view-berita">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Detail Artikel</h2>
+            <button class="modal-close" onclick="closeModal('modal-view-berita')"><i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="modal-view-berita-body"></div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script src="adminpage.js"></script>
+</body>
+</html>
