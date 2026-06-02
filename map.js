@@ -318,60 +318,38 @@ function toggleSidebarRight() {
     var icon = document.getElementById('sidebarRightToggleIcon');
     
     sidebar.classList.toggle('collapsed');
-    
-    // Balikkan arah ikon chevron penunjuk arah
-    icon.className = sidebar.classList.contains('collapsed')
-        ? 'fa fa-chevron-left'
-        : 'fa fa-chevron-right';
+    icon.className = sidebar.classList.contains('collapsed') ? 'fa fa-chevron-left' : 'fa fa-chevron-right';
 }
 
-/* ===== FUNGSI PENCARIAN DATA BIDANG TANAH ===== */
 function cariPencarianEnter(e) {
     if (e.key === 'Enter') filterPencarian();
 }
 
 function filterPencarian() {
-    // Ambil nilai dari input box pencarian
     var input = document.getElementById('inputCari').value.toLowerCase().trim();
     if (!input) return;
-    
-    // Pastikan layer bidang tanah sudah dimuat di peta
     if (!bidangTanahLayer) {
         alert("Lapisan Bidang Tanah belum aktif. Pastikan layer sudah dinyalakan.");
         return;
     }
 
     var ditemukan = false;
-
-    // Iterasi setiap polygon/titik pada layer bidang tanah
     bidangTanahLayer.eachLayer(function(layer) {
-        // Jika sudah ditemukan 1 data yang cocok, lewati yang lain agar lebih ringan (opsional)
         if (ditemukan) return; 
 
         var p = layer.feature.properties;
-        
-        // Tarik data atribut D_NOP dan ALAMAT. 
-        // Fallback "" (string kosong) diberikan agar script tidak error jika data atribut bernilai null.
         var nop = p['D_NOP'] ? String(p['D_NOP']).toLowerCase() : "";
         var alamat = p['ALAMAT'] ? String(p['ALAMAT']).toLowerCase() : "";
 
-        // Cek kecocokan input dengan NOP atau Alamat
         if (nop.includes(input) || alamat.includes(input)) {
-            
-            // Terbang (Zoom) ke luasan polygon bidang tersebut
             if (layer.getBounds) {
-                // maxZoom dibatasi agar peta tidak terlalu menukik dekat
                 map.flyToBounds(layer.getBounds(), { maxZoom: 19, padding: [40, 40], duration: 1.2 });
             } else if (layer.getLatLng) { 
-                // Fallback jika datanya berupa titik/Point
                 map.flyTo(layer.getLatLng(), 19, { duration: 1.2 });
             }
 
-            // Beri jeda waktu sampai animasi terbang selesai sebelum memunculkan popup
             setTimeout(function() {
                 layer.openPopup();
-                
-                // Memicu fungsi highlight merah yang sudah Anda buat sebelumnya
                 highlightFeature({ target: layer });
             }, 1300);
 
@@ -402,7 +380,6 @@ function fokusKeKantor() {
         map.addLayer(layerKantor);
         document.getElementById('checkKantor').checked = true;
     }
-    // Filter only Kecamatan or Desa main offices for bounding box focus
     var officeMarkers = layerKantor.getLayers().filter((m, i) => dataLokasi[i].tipe !== "Wilayah Desa");
     if(officeMarkers.length > 0) {
         var group = new L.featureGroup(officeMarkers);
@@ -421,9 +398,7 @@ function toggleSidebar() {
     var sidebar = document.getElementById('mapSidebar');
     var icon = document.getElementById('sidebarToggleIcon');
     sidebar.classList.toggle('collapsed');
-    icon.className = sidebar.classList.contains('collapsed')
-        ? 'fa fa-chevron-right'
-        : 'fa fa-chevron-left';
+    icon.className = sidebar.classList.contains('collapsed') ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
 }
 
 function resetLayer() {
@@ -442,24 +417,16 @@ function bukaDataBidang() {
     window.open("BIDANG.html", "_blank");
 }
 
-/* ===== TRANSPARENCY CONTROLLER ===== */
 function ubahTransparansi(layerType, value) {
     var opacityVal = parseFloat(value) / 100;
     
     if (layerType === 'wms' && wmsLayer) {
-        wmsLayer.setStyle({ 
-            fillOpacity: opacityVal, 
-            opacity: opacityVal 
-        });
+        wmsLayer.setStyle({ fillOpacity: opacityVal, opacity: opacityVal });
     } else if (layerType === 'bidang' && bidangTanahLayer) {
-        bidangTanahLayer.setStyle({ 
-            fillOpacity: opacityVal * 0.7, // Keep initial relative max opacity
-            opacity: opacityVal 
-        });
+        bidangTanahLayer.setStyle({ fillOpacity: opacityVal * 0.7, opacity: opacityVal });
     }
 }
 
-/* ===== REAL-TIME CLOCK ===== */
 function updateClock() {
     var now = new Date();
     var opts = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -468,12 +435,10 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-/* ===== INIT COMPONENTS ON DOM LOAD ===== */
 window.addEventListener('DOMContentLoaded', function() {
     buildInlineLegend();
 });
 
-/* ===== DEEP LINK ROUTING FROM URL PARAMETERS ===== */
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const lat = urlParams.get('lat');
@@ -482,10 +447,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (lat && lng) {
         setTimeout(() => {
-            map.flyTo([parseFloat(lat), parseFloat(lng)], parseInt(zoom), {
-                animate: true,
-                duration: 1.5
-            });
+            map.flyTo([parseFloat(lat), parseFloat(lng)], parseInt(zoom), { animate: true, duration: 1.5 });
             L.marker([parseFloat(lat), parseFloat(lng)]).addTo(map)
                 .bindPopup("Lokasi Bidang Tanah Terpilih")
                 .openPopup();
@@ -493,41 +455,21 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-/* ======================================================
-   UPGRADED UNDUH DATA FUNCTIONS (GEOJSON & CSV)
-   ====================================================== */
-
-/* 1. Fungsi Unduh GeoJSON (Mendukung unduh data mentah atau data ter-filter) */
 function unduhDataGeoJSON(tipeLayer, pakeFilter = false) {
     var dataObj = null;
     var namaFile = "";
 
     if (tipeLayer === 'PL') {
-        if (typeof json_PL_0 === 'undefined') {
-            alert("Data spasial Penggunaan Lahan belum dimuat.");
-            return;
-        }
-        // Penggunaan Lahan sejauh ini belum dibuatkan filter multi-kondisi, pakai data mentah
+        if (typeof json_PL_0 === 'undefined') { alert("Data spasial Penggunaan Lahan belum dimuat."); return; }
         dataObj = json_PL_0;
         namaFile = "penggunaan_lahan_karangdowo.geojson";
-        
     } else if (tipeLayer === 'BIDANG') {
-        if (typeof json_BIDANG_TANAH_1 === 'undefined' || !bidangTanahLayer) {
-            alert("Data spasial Bidang Tanah belum tersedia.");
-            return;
-        }
-
+        if (typeof json_BIDANG_TANAH_1 === 'undefined' || !bidangTanahLayer) { alert("Data spasial Bidang Tanah belum tersedia."); return; }
         if (pakeFilter) {
-            // Mengambil kondisi spasial bidang tanah terbaru langsung dari objek peta Leaflet
             dataObj = bidangTanahLayer.toGeoJSON();
             namaFile = "bidang_tanah_terfilter_karangdowo.geojson";
-            
-            if (!dataObj || dataObj.features.length === 0) {
-                alert("Tidak ada data bidang tanah yang lolos filter saat ini untuk diunduh.");
-                return;
-            }
+            if (!dataObj || dataObj.features.length === 0) { alert("Tidak ada data bidang tanah yang lolos filter."); return; }
         } else {
-            // Mengunduh seluruh master data tanpa memperdulikan filter visual
             dataObj = json_BIDANG_TANAH_1;
             namaFile = "seluruh_bidang_tanah_karangdowo.geojson";
         }
@@ -535,7 +477,6 @@ function unduhDataGeoJSON(tipeLayer, pakeFilter = false) {
 
     if (!dataObj) return;
 
-    // Proses download menggunakan Blob objek blob teks bertipe json
     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj));
     var downloadLink = document.createElement('a');
     downloadLink.setAttribute("href", dataStr);
@@ -545,38 +486,23 @@ function unduhDataGeoJSON(tipeLayer, pakeFilter = false) {
     downloadLink.remove();
 }
 
-/* 2. Fungsi Unduh Atribut Saja Ke Format CSV (Bisa langsung dibuka di Microsoft Excel) */
 function unduhDataCSV(tipeLayer) {
     var layerAktif = (tipeLayer === 'PL') ? wmsLayer : bidangTanahLayer;
-    
-    if (!layerAktif) {
-        alert("Lapisan terkait tidak aktif atau tidak ditemukan di memori peta.");
-        return;
-    }
+    if (!layerAktif) { alert("Lapisan terkait tidak aktif."); return; }
 
     var geojsonData = layerAktif.toGeoJSON();
     var features = geojsonData.features;
+    if (features.length === 0) { alert("Tidak ada baris data atribut yang dapat diekspor."); return; }
 
-    if (features.length === 0) {
-        alert("Tidak ada baris data atribut yang dapat diekspor.");
-        return;
-    }
-
-    // Ekstrak Header Kolom dari Feature pertama
     var headers = Object.keys(features[0].properties);
     var csvRows = [];
-    csvRows.push(headers.join(',')); // Baris pertama CSV
+    csvRows.push(headers.join(',')); 
 
-    // Loop untuk menyusun data baris per baris
     features.forEach(function(feature) {
         var values = headers.map(function(headerName) {
             var val = feature.properties[headerName];
-            // Bersihkan string dari koma atau enter agar format tabel tidak rusak di Excel
-            if (typeof val === 'string') {
-                val = `"${val.replace(/"/g, '""')}"`; 
-            } else if (val === null || val === undefined) {
-                val = '';
-            }
+            if (typeof val === 'string') { val = `"${val.replace(/"/g, '""')}"`; } 
+            else if (val === null || val === undefined) { val = ''; }
             return val;
         });
         csvRows.push(values.join(','));
@@ -585,10 +511,9 @@ function unduhDataCSV(tipeLayer) {
     var csvContent = csvRows.join('\n');
     var namaFileCSV = (tipeLayer === 'PL') ? "tabel_atribut_pl.csv" : "tabel_atribut_bidang_tanah.csv";
 
-    // Trigger download blob CSV
     var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     var link = document.createElement("a");
-    if (navigator.msSaveBlob) { // Fallback IE 10+
+    if (navigator.msSaveBlob) { 
         navigator.msSaveBlob(blob, namaFileCSV);
     } else {
         var url = URL.createObjectURL(blob);
@@ -600,93 +525,56 @@ function unduhDataCSV(tipeLayer) {
     }
 }
 
-/* ======================================================
-   FITUR INTERAKTIF: RE-FILTERING SPASIAL & ATRIBUT
-   ====================================================== */
-
-/* 1. Eksekusi Pencarian & Filter Lapisan Bidang Tanah */
 function terapkanFilterBidang() {
     if (typeof json_BIDANG_TANAH_1 === 'undefined' || !bidangTanahLayer) return;
 
-    // Ambil nilai dari element kontrol UI
     var kataKunciNOP = document.getElementById('filterCariNOP').value.toLowerCase().trim();
     var statusTerpilih = document.getElementById('filterStatusBidang').value;
     var minLuas = parseFloat(document.getElementById('filterLuasMinBidang').value) || 0;
     var maxLuas = parseFloat(document.getElementById('filterLuasMaxBidang').value) || Infinity;
 
-    // Bersihkan data lama di peta
     map.removeLayer(bidangTanahLayer);
-
-    // Bangun ulang layer berdasarkan kriteria filter
     bidangTanahLayer = L.geoJson(json_BIDANG_TANAH_1, {
-        interactive: true,
-        pane: 'pane_BIDANG_TANAH_1',
-        onEachFeature: pop_BIDANG,
-        style: style_BIDANG,
+        interactive: true, pane: 'pane_BIDANG_TANAH_1', onEachFeature: pop_BIDANG, style: style_BIDANG,
         filter: function(feature) {
             var p = feature.properties;
-            
-            // Kriteria 1: Cocok NOP (Partial text search)
             var matchNOP = !kataKunciNOP || (p['D_NOP'] && String(p['D_NOP']).toLowerCase().includes(kataKunciNOP));
-            
-            // Kriteria 2: Cocok Status Hak Tanah
             var matchStatus = (statusTerpilih === 'Semua' || String(p['STATUS']) === statusTerpilih);
-            
-            // Kriteria 3: Masuk ke dalam Rentang Luasan
             var luasVal = parseFloat(p['LUAS']) || 0;
             var matchLuas = (luasVal >= minLuas && luasVal <= maxLuas);
-
             return matchNOP && matchStatus && matchLuas;
         }
     }).addTo(map);
 
-    // Pastikan checkbox UI layer tetap sinkron dan aktif
     var checkEl = document.getElementById('checkBidang');
     if (checkEl) checkEl.checked = true;
 }
 
-/* 2. Eksekusi Pencarian & Filter Lapisan Penggunaan Lahan (PL) */
 function terapkanFilterPL() {
     if (typeof json_PL_0 === 'undefined' || !wmsLayer) return;
 
-    // Ambil nilai dari element kontrol UI
     var kataKunciToponim = document.getElementById('filterCariToponim').value.toLowerCase().trim();
     var jenisTerpilih = document.getElementById('filterJenisPL').value;
     var minLuas = parseFloat(document.getElementById('filterLuasMinPL').value) || 0;
     var maxLuas = parseFloat(document.getElementById('filterLuasMaxPL').value) || Infinity;
 
-    // Bersihkan data lama di peta
     map.removeLayer(wmsLayer);
-
-    // Bangun ulang layer berdasarkan kriteria filter
     wmsLayer = L.geoJson(json_PL_0, {
-        interactive: true,
-        pane: 'pane_PL_0',
-        onEachFeature: pop_PL,
-        style: style_PL,
+        interactive: true, pane: 'pane_PL_0', onEachFeature: pop_PL, style: style_PL,
         filter: function(feature) {
             var p = feature.properties;
-
-            // Kriteria 1: Cocok Toponim / Nama Objek
             var matchToponim = !kataKunciToponim || (p['TOPONIM'] && String(p['TOPONIM']).toLowerCase().includes(kataKunciToponim));
-            
-            // Kriteria 2: Cocok Jenis Penggunaan Lahan
             var matchJenis = (jenisTerpilih === 'Semua' || String(p['JENIS']) === jenisTerpilih);
-            
-            // Kriteria 3: Masuk ke dalam Rentang Luasan (Mendukung properti LUAS atau Shape_Area)
             var luasVal = parseFloat(p['LUAS']) || parseFloat(p['Shape_Area']) || 0;
             var matchLuas = (luasVal >= minLuas && luasVal <= maxLuas);
-
             return matchToponim && matchJenis && matchLuas;
         }
     }).addTo(map);
 
-    // Pastikan checkbox UI layer tetap sinkron dan aktif
     var checkEl = document.getElementById('checkWMS');
     if (checkEl) checkEl.checked = true;
 }
 
-/* 3. Fungsi Reset/Kembalikan Filter Bidang Tanah */
 function resetFilterBidang() {
     document.getElementById('filterCariNOP').value = '';
     document.getElementById('filterStatusBidang').value = 'Semua';
@@ -695,7 +583,6 @@ function resetFilterBidang() {
     terapkanFilterBidang();
 }
 
-/* 4. Fungsi Reset/Kembalikan Filter Penggunaan Lahan */
 function resetFilterPL() {
     document.getElementById('filterCariToponim').value = '';
     document.getElementById('filterJenisPL').value = 'Semua';
@@ -704,3 +591,111 @@ function resetFilterPL() {
     terapkanFilterPL();
 }
 
+
+/* ======================================================
+   FITUR DIGITASI (LEAFLET DRAW) YANG TELAH DIRAPIKAN
+   ====================================================== */
+
+// 1. Inisialisasi Layer Penampung Digitasi
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+// 2. Setup Toolbar Digitasi
+var drawControl = new L.Control.Draw({
+    position: 'topleft',
+    draw: {
+        polygon: {
+            allowIntersection: false,
+            showArea: true,
+            shapeOptions: { color: '#2ecc71', weight: 3 }
+        },
+        polyline: { shapeOptions: { color: '#3498db', weight: 4 } },
+        rectangle: { shapeOptions: { color: '#f39c12' } },
+        circle: false,
+        marker: {
+            icon: L.divIcon({
+                html: '<i class="fa fa-map-marker-alt" style="color:red;font-size:20px;"></i>',
+                className: '',
+                iconSize: [20,20],
+                iconAnchor: [10,20]
+            })
+        },
+        circlemarker: false
+    },
+    edit: {
+        featureGroup: drawnItems,
+        remove: true
+    }
+});
+map.addControl(drawControl);
+
+// 3. Event Listener Tunggal Saat Gambar Selesai Dibuat
+map.on(L.Draw.Event.CREATED, function(e) {
+    var layer = e.layer;
+    var type = e.layerType;
+
+    // Mempersiapkan struktur awal GeoJSON untuk properti/atribut spasial
+    layer.feature = layer.feature || { type: "Feature", properties: {} };
+    layer.feature.properties['TIPE_OBJEK'] = type.toUpperCase();
+
+    // Hitung area otomatis jika gambar berupa polygon/bidang
+    var infoLuas = "";
+    if (type === 'polygon' || type === 'rectangle') {
+        var area = L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]);
+        var luasVal = area.toFixed(2);
+        
+        layer.feature.properties['LUAS_M2'] = parseFloat(luasVal);
+        infoLuas = `<tr><td>Luas Area</td><td><b>${luasVal} m²</b></td></tr>`;
+    }
+
+    // Input sederhana menggunakan Prompt Browser
+    var nopVal = prompt("Masukkan DNOP Bidang (Kosongkan jika bukan bidang):") || "-";
+    var statusVal = prompt("Masukkan Status Hak Tanah (Misal: HM/HGB):") || "Kosong";
+
+    layer.feature.properties['D_NOP'] = nopVal;
+    layer.feature.properties['STATUS'] = statusVal;
+
+    // Menyatukan informasi ke dalam Pop-Up yang rapi
+    var popupContent = `
+        <div class="custom-popup-wrap">
+            <div class="custom-popup-header" style="background:#2c3e50;">
+                <i class="fa fa-pencil-alt"></i>
+                <div>
+                    <strong>Data Digitasi Baru</strong>
+                    <span>${type.toUpperCase()}</span>
+                </div>
+            </div>
+            <div class="custom-popup-body">
+                <table>
+                    <tr><td>Nomor DNOP</td><td>${nopVal}</td></tr>
+                    <tr><td>Status Tanah</td><td>${statusVal}</td></tr>
+                    ${infoLuas}
+                </table>
+            </div>
+        </div>
+    `;
+
+    layer.bindPopup(popupContent);
+    drawnItems.addLayer(layer);
+    layer.openPopup();
+});
+
+// 4. Fungsi Unduh Hasil Digitasi (Dipanggil dari HTML Sidebar)
+function exportDigitasi() {
+    var data = drawnItems.toGeoJSON();
+
+    if(data.features.length === 0){
+        alert("Belum ada objek digitasi yang digambar pada peta.");
+        return;
+    }
+
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+    var dlAnchor = document.createElement('a');
+
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "hasil_digitasi_karangdowo.geojson");
+
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+}
