@@ -7,13 +7,16 @@
     <title>Peta Interaktif — SIP Karangdowo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="map.css">
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="map-header">
     <div class="map-header-left">
         <a href="index.html" class="btn-back" title="Kembali ke Beranda">
@@ -42,23 +45,19 @@
     </div>
 </header>
 
-<!-- ===== MAIN LAYOUT ===== -->
 <div class="map-layout">
 
-    <!-- SIDEBAR PANEL -->
     <aside class="map-sidebar" id="mapSidebar">
         <div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
             <i class="fa fa-chevron-left" id="sidebarToggleIcon"></i>
         </div>
 
-        <!-- Panel: Layers -->
         <div class="sidebar-section">
             <div class="ss-header">
                 <i class="fa fa-layer-group"></i>
                 <span>Layer Peta</span>
             </div>
             <div class="ss-body">
-                <!-- Layer: Kantor Pemerintahan -->
                 <div class="layer-toggle-item">
                     <div class="lti-label">
                         <span class="lti-icon" style="color:#e74c3c;"><i class="fa fa-landmark"></i></span>
@@ -70,7 +69,6 @@
                     </label>
                 </div>
 
-                <!-- Layer: Penggunaan Lahan -->
                 <div class="layer-toggle-item">
                     <div class="lti-label">
                         <span class="lti-icon" style="color:#2ecc71;"><i class="fa fa-map"></i></span>
@@ -86,7 +84,6 @@
                     <input type="range" min="0" max="100" value="100" oninput="ubahTransparansi('wms', this.value)">
                 </div>
 
-                <!-- Layer: Bidang Tanah -->
                 <div class="layer-toggle-item">
                     <div class="lti-label">
                         <span class="lti-icon" style="color:#e67e22;"><i class="fa fa-vector-square"></i></span>
@@ -104,7 +101,6 @@
             </div>
         </div>
 
-        <!-- Panel: Quick Nav -->
         <div class="sidebar-section">
             <div class="ss-header">
                 <i class="fa fa-map-pin"></i>
@@ -127,141 +123,139 @@
         </div>
 
         <div class="sidebar-card">
-    <div class="card-header">
-        <i class="fa fa-filter" style="color: #e67e22;"></i>
-        <span>Panel Filter Data Spasial</span>
-    </div>
-    <div class="card-body">
-        
-        <div class="filter-section-title">
-            <i class="fa fa-vector-square"></i> Filter Bidang Tanah
-        </div>
-        <div class="filter-box">
-            <div class="filter-field">
-                <label>Cari DNOP (Nomor Bidang)</label>
-                <input type="text" id="filterCariNOP" placeholder="Masukkan DNOP..." onkeyup="terapkanFilterBidang()">
+            <div class="card-header">
+                <i class="fa fa-filter" style="color: #e67e22;"></i>
+                <span>Panel Filter Data Spasial</span>
             </div>
-            <div class="filter-field">
-                <label>Status Hak Tanah</label>
-                <select id="filterStatusBidang" onchange="terapkanFilterBidang()">
-                    <option value="Semua">-- Semua Status --</option>
-                    <option value="Hak Milik">Hak Milik</option>
-                    <option value="Hak Guna Bangunan">Hak Guna Bangunan</option>
-                    <option value="Hak Pakai">Hak Pakai</option>
-                    <option value="Hak Wakaf">Hak Wakaf</option>
-                    <option value="Kosong">Kosong</option>
-                </select>
-            </div>
-            <div class="filter-field">
-                <label>Rentang Luas (m²)</label>
-                <div style="display: flex; gap: 5px; align-items: center;">
-                    <input type="number" id="filterLuasMinBidang" placeholder="Min" oninput="terapkanFilterBidang()">
-                    <span style="color: #fff;">-</span>
-                    <input type="number" id="filterLuasMaxBidang" placeholder="Max" oninput="terapkanFilterBidang()">
+            <div class="card-body">
+                
+                <div class="filter-section-title">
+                    <i class="fa fa-vector-square"></i> Filter Bidang Tanah
                 </div>
-            </div>
-            <button onclick="resetFilterBidang()" class="btn-reset-filter">
-                <i class="fa fa-sync-alt"></i> Reset Filter Bidang
-            </button>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
-
-        <div class="filter-section-title">
-            <i class="fa fa-map"></i> Filter Penggunaan Lahan (PL)
-        </div>
-        <div class="filter-box">
-            <div class="filter-field">
-                <label>Cari Nama Objek / Toponim</label>
-                <input type="text" id="filterCariToponim" placeholder="Contoh: Masjid, Sungai..." onkeyup="terapkanFilterPL()">
-            </div>
-            <div class="filter-field">
-                <label>Klasifikasi / Jenis PL</label>
-                <select id="filterJenisPL" onchange="terapkanFilterPL()">
-                    <option value="Semua">-- Semua Jenis Lahan --</option>
-                    <option value="Bangunan Hunian">Bangunan Hunian</option>
-                    <option value="Bangunan Industri">Bangunan Industri</option>
-                    <option value="Bangunan Pendidikan">Bangunan Pendidikan</option>
-                    <option value="Bangunan Perdagangan dan Jasa">Bangunan Perdagangan dan Jasa</option>
-                    <option value="Bangunan Peribadatan">Bangunan Peribadatan</option>
-                    <option value="Bangunan Perkantoran">Bangunan Perkantoran</option>
-                    <option value="Jalan">Jalan</option>
-                    <option value="Sawah">Sawah</option>
-                    <option value="Sungai">Sungai</option>
-                    <option value="Pekarangan">Pekarangan</option>
-                    <option value="Kebun Campuran">Kebun Campuran</option>
-                </select>
-            </div>
-            <div class="filter-field">
-                <label>Rentang Luas (m²)</label>
-                <div style="display: flex; gap: 5px; align-items: center;">
-                    <input type="number" id="filterLuasMinPL" placeholder="Min" oninput="terapkanFilterPL()">
-                    <span style="color: #fff;">-</span>
-                    <input type="number" id="filterLuasMaxPL" placeholder="Max" oninput="terapkanFilterPL()">
+                <div class="filter-box">
+                    <div class="filter-field">
+                        <label>Cari DNOP (Nomor Bidang)</label>
+                        <input type="text" id="filterCariNOP" placeholder="Masukkan DNOP..." onkeyup="terapkanFilterBidang()">
+                    </div>
+                    <div class="filter-field">
+                        <label>Status Hak Tanah</label>
+                        <select id="filterStatusBidang" onchange="terapkanFilterBidang()">
+                            <option value="Semua">-- Semua Status --</option>
+                            <option value="Hak Milik">Hak Milik</option>
+                            <option value="Hak Guna Bangunan">Hak Guna Bangunan</option>
+                            <option value="Hak Pakai">Hak Pakai</option>
+                            <option value="Hak Wakaf">Hak Wakaf</option>
+                            <option value="Kosong">Kosong</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Rentang Luas (m²)</label>
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            <input type="number" id="filterLuasMinBidang" placeholder="Min" oninput="terapkanFilterBidang()">
+                            <span style="color: #fff;">-</span>
+                            <input type="number" id="filterLuasMaxBidang" placeholder="Max" oninput="terapkanFilterBidang()">
+                        </div>
+                    </div>
+                    <button onclick="resetFilterBidang()" class="btn-reset-filter">
+                        <i class="fa fa-sync-alt"></i> Reset Filter Bidang
+                    </button>
                 </div>
-            </div>
-            <button onclick="resetFilterPL()" class="btn-reset-filter">
-                <i class="fa fa-sync-alt"></i> Reset Filter Lahan
-            </button>
-        </div>
 
-    </div>
-</div>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+
+                <div class="filter-section-title">
+                    <i class="fa fa-map"></i> Filter Penggunaan Lahan (PL)
+                </div>
+                <div class="filter-box">
+                    <div class="filter-field">
+                        <label>Cari Nama Objek / Toponim</label>
+                        <input type="text" id="filterCariToponim" placeholder="Contoh: Masjid, Sungai..." onkeyup="terapkanFilterPL()">
+                    </div>
+                    <div class="filter-field">
+                        <label>Klasifikasi / Jenis PL</label>
+                        <select id="filterJenisPL" onchange="terapkanFilterPL()">
+                            <option value="Semua">-- Semua Jenis Lahan --</option>
+                            <option value="Bangunan Hunian">Bangunan Hunian</option>
+                            <option value="Bangunan Industri">Bangunan Industri</option>
+                            <option value="Bangunan Pendidikan">Bangunan Pendidikan</option>
+                            <option value="Bangunan Perdagangan dan Jasa">Bangunan Perdagangan dan Jasa</option>
+                            <option value="Bangunan Peribadatan">Bangunan Peribadatan</option>
+                            <option value="Bangunan Perkantoran">Bangunan Perkantoran</option>
+                            <option value="Jalan">Jalan</option>
+                            <option value="Sawah">Sawah</option>
+                            <option value="Sungai">Sungai</option>
+                            <option value="Pekarangan">Pekarangan</option>
+                            <option value="Kebun Campuran">Kebun Campuran</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Rentang Luas (m²)</label>
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            <input type="number" id="filterLuasMinPL" placeholder="Min" oninput="terapkanFilterPL()">
+                            <span style="color: #fff;">-</span>
+                            <input type="number" id="filterLuasMaxPL" placeholder="Max" oninput="terapkanFilterPL()">
+                        </div>
+                    </div>
+                    <button onclick="resetFilterPL()" class="btn-reset-filter">
+                        <i class="fa fa-sync-alt"></i> Reset Filter Lahan
+                    </button>
+                </div>
+
+            </div>
+        </div>
 
         <div class="sidebar-card">
-    <div class="card-header">
-        <i class="fa fa-download" style="color: #3498db;"></i>
-        <span>Unduh Data (Export Data)</span>
-    </div>
-    <div class="card-body">
-        <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">
-            Pilih format data spasial atau atribut terfilter untuk diunduh ke komputer Anda.
-        </p>
-        
-        <div class="download-group" style="margin-bottom: 12px;">
-            <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; color: #fff;">
-                1. Lapisan Penggunaan Lahan (PL)
-            </label>
-            <div style="display: flex; gap: 6px;">
-                <button onclick="unduhDataGeoJSON('PL', false)" class="btn-download geojson">
-                    <i class="fa fa-file-code"></i> GeoJSON
-                </button>
-                <button onclick="unduhDataCSV('PL')" class="btn-download csv">
-                    <i class="fa fa-file-excel"></i> Tabel (CSV)
-                </button>
+            <div class="card-header">
+                <i class="fa fa-download" style="color: #3498db;"></i>
+                <span>Unduh Data (Export Data)</span>
             </div>
-        </div>
+            <div class="card-body">
+                <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">
+                    Pilih format data spasial atau atribut terfilter untuk diunduh ke komputer Anda.
+                </p>
+                
+                <div class="download-group" style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; color: #fff;">
+                        1. Lapisan Penggunaan Lahan (PL)
+                    </label>
+                    <div style="display: flex; gap: 6px;">
+                        <button onclick="unduhDataGeoJSON('PL', false)" class="btn-download geojson">
+                            <i class="fa fa-file-code"></i> GeoJSON
+                        </button>
+                        <button onclick="unduhDataCSV('PL')" class="btn-download csv">
+                            <i class="fa fa-file-excel"></i> Tabel (CSV)
+                        </button>
+                    </div>
+                </div>
 
-        <div class="download-group">
-            <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; color: #fff;">
-                2. Lapisan Bidang Tanah
-            </label>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <div style="display: flex; gap: 6px;">
-                    <button onclick="unduhDataGeoJSON('BIDANG', false)" class="btn-download geojson" title="Unduh seluruh bidang tanah">
-                        <i class="fa fa-file-code"></i> GeoJSON
-                    </button>
-                    <button onclick="unduhDataCSV('BIDANG')" class="btn-download csv">
-                        <i class="fa fa-file-excel"></i> Tabel (CSV)
+                <div class="download-group" style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; color: #fff;">
+                        2. Lapisan Bidang Tanah
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <div style="display: flex; gap: 6px;">
+                            <button onclick="unduhDataGeoJSON('BIDANG', false)" class="btn-download geojson" title="Unduh seluruh bidang tanah">
+                                <i class="fa fa-file-code"></i> GeoJSON
+                            </button>
+                            <button onclick="unduhDataCSV('BIDANG')" class="btn-download csv">
+                                <i class="fa fa-file-excel"></i> Tabel (CSV)
+                            </button>
+                        </div>
+                        <button onclick="unduhDataGeoJSON('BIDANG', true)" class="btn-download filtered" title="Unduh bidang tanah yang muncul akibat filter saat ini">
+                            <i class="fa fa-filter"></i> Unduh Hasil Filter (GeoJSON)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-group" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+                    <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; color: #fff;">
+                        3. Layer Gambar / Digitasi Baru
+                    </label>
+                    <button onclick="exportDigitasi()" class="btn-download geojson" style="background-color: #2ecc71; color: white;">
+                        <i class="fa fa-pencil-ruler"></i> Unduh Hasil Digitasi (GeoJSON)
                     </button>
                 </div>
-                <button onclick="unduhDataGeoJSON('BIDANG', true)" class="btn-download filtered" title="Unduh bidang tanah yang muncul akibat filter saat ini">
-                    <i class="fa fa-filter"></i> Unduh Hasil Filter Saja (GeoJSON)
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
-        <!-- Panel: Legend -->
-        <div class="sidebar-section" id="legendSection">
-            <div class="ss-header">
-                <i class="fa fa-palette"></i>
-                <span>Legenda</span>
-            </div>
-            <div class="ss-body">
-                <div id="legendBidang" class="legend-wms"></div>
-                <div id="legendPL" class="legend-wms" style="margin-top:12px;"></div>
             </div>
         </div>
 
@@ -270,11 +264,9 @@
         </div>
     </aside>
 
-    <!-- MAP CONTAINER -->
     <div class="map-container">
         <div id="map"></div>
 
-        <!-- Map Info Bar (bottom) -->
         <div class="map-info-bar">
             <div class="mib-item">
                 <i class="fa fa-crosshairs"></i>
@@ -291,14 +283,13 @@
     </div>
 </div>
 
-<!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- qgis2web GeoJSON data files — load BEFORE map.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
 <script src="data/PL_0.js"></script>
 <script src="data/BIDANG_TANAH_1.js"></script>
 
-<!-- Map scripts -->
 <script src="map.js"></script>
 
 </body>
